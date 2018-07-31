@@ -1,0 +1,98 @@
+<head>
+  <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.indigo-pink.min.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
+  <style>
+    .mdl-data-table tbody tr {
+      height: 70px;
+    }
+    .mdl-data-table th:nth-of-type(2) {
+      font-size: 50px;
+      text-align: center;
+      padding: 0 48px 12px 48px;
+      opacity: 1;
+      color: rgb(210,44,44);
+    }
+    .mdl-data-table th, .mdl-data-table th.first {
+      text-align: left;
+      font-size: 20px;
+      height: 70px;
+      line-height: 40px;
+      color: white;
+    }
+    .mdl-data-table tbody tr:hover {
+      color: rgb(210,44,44);
+    }
+    .mdl-data-table tbody tr:hover th {
+      opacity: 1;
+      color: rgb(210,44,44);
+    }
+    .mdl-data-table tbody tr:hover th:nth-of-type(2) {
+      opacity: 1;
+    }
+   
+    .mdl-data-table tbody tr.learned {
+      background-color: white;
+    }
+    .mdl-data-table tbody tr.learned th{
+      color: black;
+      opacity: 0.1;
+    }
+    .mdl-data-table tbody tr.learned:hover th{
+      color: black;
+      opacity: 1;
+    }
+    .mdl-data-table tbody tr.learned th:nth-of-type(2) {
+      background-color: white;
+    }
+  </style>
+</head>
+<body style="
+text-align: center;
+width: 100vh;
+padding: 2% 13%;
+">
+<table style="width: 100%;" class="kanji-table mdl-data-table mdl-js-data-table mdl-data-table--selectable mdl-shadow--2dp">
+  <tbody>
+  </tbody>
+</table>
+<script type="text/javascript" src="./data.json"></script>
+<script>
+  tbody = document.querySelector("table tbody")
+  kanji = localStorage.getItem("kanji")
+  if(!kanji){
+    kanji = JSON.stringify(data)
+    localStorage.setItem("kanji", kanji)
+  }
+  kanji = JSON.parse(kanji)
+  kanji.forEach((k, index) => {
+    tr = document.createElement("tr")
+    tr.dataset.index = index
+    k.content.forEach((item) => {
+      th = document.createElement("th")
+      th.textContent = item
+      tr.appendChild(th)
+    })
+    if(k.learned) {
+      tr.className += "learned"
+    }
+    tbody.appendChild(tr)
+  })
+
+  tr_list = document.getElementsByTagName("tr")
+  for(i=0; i<tr_list.length; i++){
+    tr_list[i].addEventListener("click", function() {
+      index = this.dataset.index
+      kanji[index].learned = !kanji[index].learned
+      className = this.className
+      if(kanji[index].learned){
+        className.indexOf("learned") < 0 && (className += "learned")
+      }
+      else {
+        className = className.replace("learned", "")
+      }
+      this.className = className
+      localStorage.setItem("kanji", JSON.stringify(kanji))
+    })
+  }
+</script>
+</body>
