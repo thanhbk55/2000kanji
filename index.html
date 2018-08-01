@@ -10,8 +10,12 @@
       text-align: center;
       padding: 0 48px 12px 48px;
       opacity: 1;
+    }
+
+    .mdl-data-table th.hightlight {
       color: rgb(210,44,44);
     }
+
     .mdl-data-table th, .mdl-data-table th.first {
       text-align: left;
       font-size: 20px;
@@ -25,9 +29,6 @@
     .mdl-data-table tbody tr:hover th {
       opacity: 1;
       color: rgb(210,44,44);
-    }
-    .mdl-data-table tbody tr:hover th:nth-of-type(2) {
-      opacity: 1;
     }
    
     .mdl-data-table tbody tr.learned {
@@ -44,7 +45,21 @@
     .mdl-data-table tbody tr.learned th:nth-of-type(2) {
       background-color: white;
     }
+
+    #change_mode {
+      position: fixed;
+      display: block;
+      right: 0;
+      bottom: 0;
+      margin-right: 40px;
+      margin-bottom: 40px;
+      z-index: 900;
+    }
   </style>
+  <script
+  src="https://code.jquery.com/jquery-3.3.1.min.js"
+  integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+  crossorigin="anonymous"></script>
 </head>
 <body style="
 text-align: center;
@@ -55,6 +70,9 @@ padding: 2% 13%;
   <tbody>
   </tbody>
 </table>
+<button data-mode="1" id="change_mode" class="mdl-button mdl-color--accent mdl-color-text--accent-contrast">
+  Âm Hán
+</button>
 <script type="text/javascript" src="./data.json"></script>
 <script>
   tbody = document.querySelector("table tbody")
@@ -67,9 +85,12 @@ padding: 2% 13%;
   kanji.forEach((k, index) => {
     tr = document.createElement("tr")
     tr.dataset.index = index
-    k.content.forEach((item) => {
+    k.content.forEach((item, index) => {
       th = document.createElement("th")
       th.textContent = item
+      if(index == 1){
+        th.className = "hightlight"
+      }
       tr.appendChild(th)
     })
     if(k.learned) {
@@ -94,5 +115,19 @@ padding: 2% 13%;
       localStorage.setItem("kanji", JSON.stringify(kanji))
     })
   }
+  $("#change_mode").on("click", function() {
+    if(this.dataset.mode == "1"){
+      this.dataset.mode = "2"
+      this.textContent = "Kanji"
+      $(".mdl-data-table th:nth-of-type(2)").removeClass("hightlight")
+      $(".mdl-data-table th:nth-of-type(3)").addClass("hightlight")
+    }
+    else {
+      this.dataset.mode = "1"
+      this.textContent = "Âm Hán"
+      $(".mdl-data-table th:nth-of-type(3)").removeClass("hightlight")
+      $(".mdl-data-table th:nth-of-type(2)").addClass("hightlight")
+    }
+  })
 </script>
 </body>
