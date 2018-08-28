@@ -13,7 +13,7 @@
     }
 
     .mdl-data-table th.hightlight {
-      color: rgb(210,44,44);
+      color: black;
     }
 
     .mdl-data-table th, .mdl-data-table th.first {
@@ -88,7 +88,7 @@ padding: 2% 13%;
     k.content.forEach((item, index) => {
       th = document.createElement("th")
       th.textContent = item
-      if(index == 1){
+      if(index !== 1){
         th.className = "hightlight"
       }
       tr.appendChild(th)
@@ -101,17 +101,23 @@ padding: 2% 13%;
 
   tr_list = document.getElementsByTagName("tr")
   for(i=0; i<tr_list.length; i++){
-    tr_list[i].addEventListener("click", function() {
-      index = this.dataset.index
-      kanji[index].learned = !kanji[index].learned
+    tr_list[i].addEventListener("dblclick", function() {
+      kanji_dom_list = $(this).parent().children()
+      item_index = kanji_dom_list.index(this)
+      kanji[item_index].learned = !kanji[item_index].learned
       className = this.className
-      if(kanji[index].learned){
+      if(kanji[item_index].learned){
+        
+        temp = kanji.splice(Number(item_index), 1)
+        temp[0] && kanji.push(temp[0])
+        $(this).insertAfter(kanji_dom_list.last())
         className.indexOf("learned") < 0 && (className += "learned")
       }
       else {
         className = className.replace("learned", "")
       }
       this.className = className
+      
       localStorage.setItem("kanji", JSON.stringify(kanji))
     })
   }
